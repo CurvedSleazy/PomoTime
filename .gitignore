@@ -1,0 +1,9 @@
+bin/
+obj/
+publish/
+.idea/
+.vs/
+.vscode/*.log
+*.iml
+src/data/*.db
+src/data/*.db-*
