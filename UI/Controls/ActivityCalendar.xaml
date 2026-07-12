@@ -1,0 +1,26 @@
+<UserControl x:Class="PomoTime.UI.Controls.ActivityCalendar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Foreground="{StaticResource TextBrush}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid>
+            <Button Content="‹" Click="PreviousMonth_Click" HorizontalAlignment="Left" FontSize="20" Padding="10,3"/>
+            <Button x:Name="MonthTitle" Click="Today_Click" HorizontalAlignment="Center" Padding="10,6"
+                    Background="Transparent" FontSize="16"/>
+            <Button Content="›" Click="NextMonth_Click" HorizontalAlignment="Right" FontSize="20" Padding="10,3"/>
+        </Grid>
+        <UniformGrid Grid.Row="1" Columns="7" Margin="0,18,0,8">
+            <TextBlock Text="MON"/><TextBlock Text="TUE"/><TextBlock Text="WED"/><TextBlock Text="THU"/>
+            <TextBlock Text="FRI"/><TextBlock Text="SAT"/><TextBlock Text="SUN"/>
+        </UniformGrid>
+        <UniformGrid x:Name="DaysGrid" Grid.Row="2" Columns="7" Rows="6"/>
+        <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="2,14,0,0">
+            <TextBlock Text="✓" Foreground="{StaticResource AccentBrush}" FontWeight="Bold" Margin="0,0,6,0"/>
+            <TextBlock Text="Timer activity" Foreground="{StaticResource MutedBrush}" FontSize="11"/>
+            <TextBlock Text="  •  Today is highlighted" Foreground="{StaticResource MutedBrush}" FontSize="11"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

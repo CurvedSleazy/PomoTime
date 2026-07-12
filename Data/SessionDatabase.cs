@@ -1,7 +1,8 @@
 using Microsoft.Data.Sqlite;
+using PomoTime.Models;
 using System.IO;
 
-namespace PomoTime;
+namespace PomoTime.Data;
 
 public sealed class SessionDatabase : IDisposable
 {
@@ -56,6 +57,20 @@ public sealed class SessionDatabase : IDisposable
         return new SessionStats(reader.GetInt64(0), reader.GetInt32(1));
     }
 
+    public HashSet<DateOnly> ActivityDates()
+    {
+        var dates = new HashSet<DateOnly>();
+        using var command = connection.CreateCommand();
+        command.CommandText = "SELECT ended_at FROM timer_sessions WHERE focused_seconds > 0";
+        using var reader = command.ExecuteReader();
+        while (reader.Read())
+        {
+            if (DateTimeOffset.TryParse(reader.GetString(0), out var timestamp))
+                dates.Add(DateOnly.FromDateTime(timestamp.ToLocalTime().DateTime));
+        }
+        return dates;
+    }
+
     public string GetSetting(string key)
     {
         using var command = connection.CreateCommand(); command.CommandText = "SELECT setting_value FROM settings WHERE setting_key=$key";
@@ -70,9 +85,4 @@ public sealed class SessionDatabase : IDisposable
     }
 
     public void Dispose() => connection.Dispose();
-}
-
-public readonly record struct SessionStats(long Seconds, int Completed)
-{
-    public string Duration => Seconds >= 3600 ? $"{Seconds / 3600}h {(Seconds % 3600) / 60:00}m" : $"{Seconds / 60}m";
 }

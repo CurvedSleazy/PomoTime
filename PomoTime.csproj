@@ -7,9 +7,10 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <AssemblyName>PomoTime</AssemblyName>
     <RootNamespace>PomoTime</RootNamespace>
+    <!-- Debug runs through Microsoft's signed dotnet host for Smart App Control compatibility. -->
+    <UseAppHost Condition="'$(Configuration)' == 'Debug'">false</UseAppHost>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.21" />
   </ItemGroup>
 </Project>
-

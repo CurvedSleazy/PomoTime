@@ -1,17 +1,19 @@
 using Microsoft.Win32;
+using PomoTime.Data;
+using PomoTime.Models;
+using PomoTime.Services;
 using System.IO;
-using System.Media;
 using System.Windows;
-using System.Windows.Media;
+using System.Windows.Input;
 using System.Windows.Threading;
 
-namespace PomoTime;
+namespace PomoTime.UI.Views;
 
 public partial class MainWindow : Window
 {
     private readonly SessionDatabase database = new();
     private readonly DispatcherTimer timer = new() { Interval = TimeSpan.FromSeconds(1) };
-    private readonly MediaPlayer alarmPlayer = new();
+    private readonly AlarmService alarmService = new();
     private int totalSeconds = 25 * 60;
     private int remainingSeconds = 25 * 60;
     private DateTimeOffset? sessionStarted;
@@ -28,7 +30,7 @@ public partial class MainWindow : Window
 
     private void StartPause_Click(object sender, RoutedEventArgs e)
     {
-        alarmPlayer.Stop();
+        alarmService.Stop();
         if (timer.IsEnabled) { timer.Stop(); StartPauseButton.Content = "Resume"; return; }
         if (sessionStarted is null)
         {
@@ -53,7 +55,7 @@ public partial class MainWindow : Window
     private void ResetTimer(bool record)
     {
         if (record) RecordInterruptedSession();
-        timer.Stop(); alarmPlayer.Stop(); sessionStarted = null;
+        timer.Stop(); alarmService.Stop(); sessionStarted = null;
         totalSeconds = ReadMinutes() * 60; remainingSeconds = totalSeconds;
         MinutesInput.IsEnabled = true; StartPauseButton.Content = "Start"; UpdateClock();
     }
@@ -73,12 +75,33 @@ public partial class MainWindow : Window
         alarmPath = dialog.FileName; AlarmName.Text = Path.GetFileName(alarmPath); database.SaveSetting("alarm_path", alarmPath);
     }
 
-    private void PlayAlarm()
+    private void Calendar_Click(object sender, RoutedEventArgs e)
     {
-        if (!File.Exists(alarmPath)) { SystemSounds.Exclamation.Play(); return; }
-        try { alarmPlayer.Open(new Uri(alarmPath)); alarmPlayer.Position = TimeSpan.Zero; alarmPlayer.Play(); }
-        catch { SystemSounds.Exclamation.Play(); }
+        OpenCalendar();
     }
+
+    private void OpenCalendar()
+    {
+        ActivityCalendar.SetActivityDates(database.ActivityDates());
+        CalendarOverlay.Visibility = Visibility.Visible;
+        CalendarButton.Content = "\u00D7";
+        CalendarButton.ToolTip = "Close activity calendar";
+    }
+
+    private void CloseCalendar()
+    {
+        CalendarOverlay.Visibility = Visibility.Collapsed;
+        CalendarButton.Content = "\u25A6";
+        CalendarButton.ToolTip = "Show activity calendar";
+    }
+
+    private void CloseCalendar_Click(object sender, RoutedEventArgs e) => CloseCalendar();
+
+    private void CalendarOverlay_MouseDown(object sender, MouseButtonEventArgs e) => CloseCalendar();
+
+    private void CalendarCard_MouseDown(object sender, MouseButtonEventArgs e) => e.Handled = true;
+
+    private void PlayAlarm() => alarmService.Play(alarmPath);
 
     private void UpdateClock() { Clock.TotalSeconds = totalSeconds; Clock.RemainingSeconds = remainingSeconds; }
 
@@ -90,6 +113,7 @@ public partial class MainWindow : Window
         SetStats(TodayStats, database.StatsSince(todayStart));
         SetStats(WeekStats, database.StatsSince(todayStart.AddDays(-daysSinceMonday)));
         SetStats(AllTimeStats, database.StatsSince(null));
+        ActivityCalendar.SetActivityDates(database.ActivityDates());
     }
 
     private static void SetStats(System.Windows.Controls.TextBlock target, SessionStats stats) =>
@@ -103,6 +127,6 @@ public partial class MainWindow : Window
 
     protected override void OnClosed(EventArgs e)
     {
-        RecordInterruptedSession(); timer.Stop(); alarmPlayer.Close(); database.Dispose(); base.OnClosed(e);
+        RecordInterruptedSession(); timer.Stop(); alarmService.Dispose(); database.Dispose(); base.OnClosed(e);
     }
 }

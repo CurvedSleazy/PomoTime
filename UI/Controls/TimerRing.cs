@@ -2,7 +2,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Media;
 
-namespace PomoTime;
+namespace PomoTime.UI.Controls;
 
 public sealed class TimerRing : FrameworkElement
 {
@@ -40,4 +40,3 @@ public sealed class TimerRing : FrameworkElement
         dc.DrawGeometry(null, pen, new PathGeometry([figure]));
     }
 }
-

@@ -2,6 +2,15 @@
   "version": "2.0.0",
   "tasks": [
     {
+      "label": "run PomoTime (Hot Reload)",
+      "type": "process",
+      "command": "${env:LOCALAPPDATA}\\Microsoft\\dotnet\\dotnet.exe",
+      "args": ["watch", "run", "--project", "${workspaceFolder}/PomoTime.csproj"],
+      "options": { "cwd": "${workspaceFolder}" },
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
       "label": "build test exe",
       "type": "shell",
       "command": "powershell",
@@ -11,4 +20,3 @@
     }
   ]
 }
-
