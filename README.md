@@ -39,7 +39,7 @@ The build script signs with SHA-256, applies a trusted timestamp, verifies the s
 
 ## Local data
 
-In development, session history is stored in `src/data/pomotime.db`. Published builds use `%LOCALAPPDATA%/PomoTime/pomotime.db`. The app reads previous sessions at launch and keeps all timer history on the device.
+Session history is stored outside the repository at `%LOCALAPPDATA%/PomoTime/pomotime.db`. The app reads previous sessions at launch and keeps all timer history on the device. Older development databases under `src/data` are merged automatically when encountered.
 
 ## Project structure
 

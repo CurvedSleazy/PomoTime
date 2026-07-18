@@ -6,5 +6,3 @@ publish/
 .vscode/*.log
 *.iml
 *.lnk
-src/data/*.db
-src/data/*.db-*

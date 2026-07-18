@@ -10,9 +10,8 @@ public sealed class SessionDatabase : IDisposable
 
     public SessionDatabase()
     {
-        string directory = Directory.Exists("src")
-            ? Path.GetFullPath(Path.Combine("src", "data"))
-            : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "PomoTime");
+        string directory = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "PomoTime");
         Directory.CreateDirectory(directory);
         connection = new SqliteConnection($"Data Source={Path.Combine(directory, "pomotime.db")}");
         connection.Open();
@@ -32,6 +31,36 @@ public sealed class SessionDatabase : IDisposable
                 setting_value TEXT NOT NULL
             );
             """;
+        command.ExecuteNonQuery();
+        MigrateLegacyDevelopmentDatabase();
+    }
+
+    private void MigrateLegacyDevelopmentDatabase()
+    {
+        string legacyDatabase = Path.GetFullPath(Path.Combine("src", "data", "pomotime.db"));
+        if (!File.Exists(legacyDatabase)) return;
+
+        using var command = connection.CreateCommand();
+        command.CommandText = """
+            ATTACH DATABASE $legacyPath AS legacy;
+            INSERT INTO main.timer_sessions(started_at, ended_at, planned_seconds, focused_seconds, completed)
+            SELECT source.started_at, source.ended_at, source.planned_seconds, source.focused_seconds, source.completed
+            FROM legacy.timer_sessions AS source
+            WHERE NOT EXISTS (
+                SELECT 1 FROM main.timer_sessions AS existing
+                WHERE existing.started_at = source.started_at
+                  AND existing.ended_at = source.ended_at
+                  AND existing.planned_seconds = source.planned_seconds
+                  AND existing.focused_seconds = source.focused_seconds
+                  AND existing.completed = source.completed
+            );
+            INSERT INTO main.settings(setting_key, setting_value)
+            SELECT setting_key, setting_value FROM legacy.settings
+            WHERE true
+            ON CONFLICT(setting_key) DO NOTHING;
+            DETACH DATABASE legacy;
+            """;
+        command.Parameters.AddWithValue("$legacyPath", legacyDatabase);
         command.ExecuteNonQuery();
     }
 
