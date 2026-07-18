@@ -1,60 +1,64 @@
-<Window x:Class="PomoTime.UI.Views.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:controls="clr-namespace:PomoTime.UI.Controls"
-        Title="PomoTime" Width="900" Height="650" MinWidth="820" MinHeight="600"
-        Background="{StaticResource BackgroundBrush}" Foreground="{StaticResource TextBrush}"
+<Window x:Class="PomoTime.UI.Views.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:controls="clr-namespace:PomoTime.UI.Controls"
+        Title="PomoTime v1.1" Width="940" Height="680" MinWidth="860" MinHeight="620"
+        Background="{DynamicResource BackgroundBrush}" Foreground="{DynamicResource TextBrush}"
         FontFamily="Segoe UI" WindowStartupLocation="CenterScreen">
     <Grid Margin="36,28">
         <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
-        <StackPanel>
-            <TextBlock Text="PomoTime" FontSize="28" FontWeight="Bold"/>
-            <TextBlock Text="Make this moment count." Foreground="{StaticResource MutedBrush}" Margin="0,4,0,0"/>
-        </StackPanel>
+        <Grid>
+            <StackPanel><TextBlock Text="PomoTime" FontSize="28" FontWeight="Bold"/>
+                <TextBlock Text="Make this moment count." Foreground="{DynamicResource MutedBrush}" Margin="0,4,0,0"/></StackPanel>
+            <Button Content="&#x2699;  Settings" HorizontalAlignment="Right" VerticalAlignment="Center" Click="Settings_Click"/>
+        </Grid>
         <Grid Grid.Row="1" Margin="0,22,0,0">
             <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="240"/></Grid.ColumnDefinitions>
             <Grid>
                 <Grid.RowDefinitions><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
-                <controls:TimerRing x:Name="Clock" Width="350" Height="350" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock Text="Focus for" VerticalAlignment="Center" Foreground="{StaticResource MutedBrush}"/>
-                    <TextBox x:Name="MinutesInput" Text="25" Width="48" Margin="10,0" Padding="7" TextAlignment="Center"
-                             Background="#30343F" Foreground="White" BorderThickness="0" LostFocus="MinutesInput_LostFocus"/>
-                    <TextBlock Text="minutes" VerticalAlignment="Center" Foreground="{StaticResource MutedBrush}" Margin="0,0,16,0"/>
-                    <Button x:Name="StartPauseButton" Content="Start" Background="{StaticResource AccentBrush}" Click="StartPause_Click"/>
-                    <Button Content="Reset" Margin="10,0,0,0" Click="Reset_Click"/>
+                <Grid>
+                    <controls:TimerRing x:Name="Clock" Width="350" Height="350" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <TextBlock x:Name="SessionModeLabel" Text="FOCUS" Foreground="{DynamicResource MutedBrush}" FontWeight="Bold"
+                               HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,110,0,0"/>
+                </Grid>
+                <StackPanel Grid.Row="1" HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,10">
+                        <TextBlock Text="Tag" VerticalAlignment="Center" Foreground="{DynamicResource MutedBrush}"/>
+                        <ComboBox x:Name="TagSelector" Width="145" Margin="9,0,0,0" Padding="6"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <TextBlock Text="Focus for" VerticalAlignment="Center" Foreground="{DynamicResource MutedBrush}"/>
+                        <TextBox x:Name="MinutesInput" Text="25" Width="48" Margin="10,0" Padding="7" TextAlignment="Center"
+                                 Background="{DynamicResource ControlBrush}" Foreground="{DynamicResource TextBrush}" BorderThickness="0" LostFocus="MinutesInput_LostFocus"/>
+                        <TextBlock Text="minutes" VerticalAlignment="Center" Foreground="{DynamicResource MutedBrush}" Margin="0,0,16,0"/>
+                        <Button x:Name="StartPauseButton" Content="Start" Background="{DynamicResource AccentBrush}" Click="StartPause_Click"/>
+                        <Button Content="Reset" Margin="10,0,0,0" Click="Reset_Click"/>
+                    </StackPanel>
                 </StackPanel>
             </Grid>
-            <Border Grid.Column="1" Background="{StaticResource PanelBrush}" CornerRadius="14" Padding="22">
+            <Border Grid.Column="1" Background="{DynamicResource PanelBrush}" CornerRadius="14" Padding="22">
                 <StackPanel>
-                    <Grid>
-                        <TextBlock Text="YOUR FOCUS" FontSize="12" FontWeight="Bold" Foreground="{StaticResource MutedBrush}" VerticalAlignment="Center"/>
-                        <Button x:Name="CalendarButton" Content="&#x25A6;" ToolTip="Show activity calendar" HorizontalAlignment="Right"
-                                FontSize="18" Padding="8,3" Click="Calendar_Click"/>
-                    </Grid>
-                    <TextBlock Text="Today" Margin="0,22,0,4" Foreground="{StaticResource MutedBrush}"/>
-                    <TextBlock x:Name="TodayStats" FontSize="18" FontWeight="SemiBold"/>
-                    <TextBlock Text="This week" Margin="0,20,0,4" Foreground="{StaticResource MutedBrush}"/>
-                    <TextBlock x:Name="WeekStats" FontSize="18" FontWeight="SemiBold"/>
-                    <TextBlock Text="All time" Margin="0,20,0,4" Foreground="{StaticResource MutedBrush}"/>
-                    <TextBlock x:Name="AllTimeStats" FontSize="18" FontWeight="SemiBold"/>
-                    <Border Height="1" Background="#3A3F4C" Margin="0,26"/>
-                    <Button Content="Choose alarm sound" HorizontalAlignment="Left" Click="ChooseAlarm_Click"/>
-                    <TextBlock x:Name="AlarmName" Text="Default system chime" Foreground="{StaticResource MutedBrush}"
-                               FontSize="11" Margin="0,9,0,0" TextTrimming="CharacterEllipsis"/>
+                    <Grid><TextBlock Text="YOUR FOCUS" Style="{StaticResource SectionLabelStyle}" VerticalAlignment="Center"/>
+                        <Button x:Name="CalendarButton" Content="&#x25A6;" ToolTip="Show activity calendar" HorizontalAlignment="Right" FontSize="18" Padding="8,3" Click="Calendar_Click"/></Grid>
+                    <TextBlock Text="Today" Margin="0,22,0,4" Foreground="{DynamicResource MutedBrush}"/><TextBlock x:Name="TodayStats" FontSize="18" FontWeight="SemiBold"/>
+                    <TextBlock Text="This week" Margin="0,20,0,4" Foreground="{DynamicResource MutedBrush}"/><TextBlock x:Name="WeekStats" FontSize="18" FontWeight="SemiBold"/>
+                    <TextBlock Text="All time" Margin="0,20,0,4" Foreground="{DynamicResource MutedBrush}"/><TextBlock x:Name="AllTimeStats" FontSize="18" FontWeight="SemiBold"/>
+                    <Border Height="1" Background="{DynamicResource ControlBrush}" Margin="0,26"/>
+                    <TextBlock Text="Themes, alarms, tags, breaks, playlist and exports are available in Settings."
+                               Foreground="{DynamicResource MutedBrush}" FontSize="11" TextWrapping="Wrap"/>
                 </StackPanel>
             </Border>
         </Grid>
-        <Grid x:Name="CalendarOverlay" Grid.RowSpan="2" Panel.ZIndex="20" Visibility="Collapsed"
-              Background="#B0181B22" MouseDown="CalendarOverlay_MouseDown">
-            <Border Width="330" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,24,0"
-                    Background="{StaticResource PanelBrush}" CornerRadius="14" Padding="20"
-                    MouseDown="CalendarCard_MouseDown">
-                <Grid>
-                    <Button Content="&#x00D7;" ToolTip="Close calendar" HorizontalAlignment="Right" VerticalAlignment="Top"
-                            FontSize="20" Padding="9,2" Panel.ZIndex="2" Click="CloseCalendar_Click"/>
-                    <controls:ActivityCalendar x:Name="ActivityCalendar" Margin="0,42,0,0"/>
-                </Grid>
+
+        <Grid x:Name="CalendarOverlay" Grid.RowSpan="2" Panel.ZIndex="20" Visibility="Collapsed" Background="#B0181B22" MouseDown="CalendarOverlay_MouseDown">
+            <Border Width="330" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,24,0" Background="{DynamicResource PanelBrush}"
+                    CornerRadius="14" Padding="20" MouseDown="OverlayCard_MouseDown">
+                <Grid><Button Content="&#x00D7;" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="20" Padding="9,2" Panel.ZIndex="2" Click="CloseCalendar_Click"/>
+                    <controls:ActivityCalendar x:Name="ActivityCalendar" Margin="0,42,0,0"/></Grid>
+            </Border>
+        </Grid>
+        <Grid x:Name="SettingsOverlay" Grid.RowSpan="2" Panel.ZIndex="30" Visibility="Collapsed" Background="#B0181B22" MouseDown="SettingsOverlay_MouseDown">
+            <Border Width="520" Height="600" HorizontalAlignment="Center" VerticalAlignment="Center" Background="{DynamicResource PanelBrush}"
+                    CornerRadius="14" Padding="24" MouseDown="OverlayCard_MouseDown">
+                <controls:SettingsView x:Name="SettingsView"/>
             </Border>
         </Grid>
     </Grid>

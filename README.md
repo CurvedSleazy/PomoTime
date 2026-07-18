@@ -2,6 +2,17 @@
 
 A local-first Windows focus timer built with C#, WPF, and SQLite.
 
+## v1.1 features
+
+- Dark, light, and custom RGB accent themes
+- CSV and JSON session-history export
+- Alarm audio stored directly in the local SQLite database
+- User-defined focus tags such as Study and Work
+- Optional automatic break timer after completed focus sessions
+- Completion notification pop-ups
+- Local ambient playlist with imported audio stored in SQLite
+- Activity calendar with completed-day indicators
+
 ## Develop with live updates
 
 Open the repository in VS Code, select **Run and Debug**, then choose **PomoTime (Hot Reload)**. Or run:

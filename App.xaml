@@ -8,8 +8,12 @@
         <SolidColorBrush x:Key="AccentBrush" Color="#FF6978" />
         <SolidColorBrush x:Key="TextBrush" Color="#F0F2F7" />
         <SolidColorBrush x:Key="MutedBrush" Color="#A0A6B4" />
+        <SolidColorBrush x:Key="ControlBrush" Color="#3A3F4C" />
+        <Style x:Key="SectionLabelStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource MutedBrush}"/><Setter Property="FontSize" Value="12"/><Setter Property="FontWeight" Value="Bold"/>
+        </Style>
         <Style TargetType="Button">
-            <Setter Property="Foreground" Value="White"/><Setter Property="Background" Value="#3A3F4C"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/><Setter Property="Background" Value="{DynamicResource ControlBrush}"/>
             <Setter Property="BorderThickness" Value="0"/><Setter Property="Padding" Value="18,10"/>
             <Setter Property="Cursor" Value="Hand"/><Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="Template">

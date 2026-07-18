@@ -20,13 +20,16 @@ public sealed class TimerRing : FrameworkElement
         double size = Math.Min(ActualWidth, ActualHeight) - 28;
         var center = new Point(ActualWidth / 2, ActualHeight / 2);
         double radius = size / 2;
-        dc.DrawEllipse(null, new Pen(new SolidColorBrush(Color.FromRgb(48, 52, 63)), 13), center, radius, radius);
+        var trackBrush = Application.Current.TryFindResource("ControlBrush") as Brush ?? new SolidColorBrush(Color.FromRgb(48, 52, 63));
+        var accentBrush = Application.Current.TryFindResource("AccentBrush") as Brush ?? new SolidColorBrush(Color.FromRgb(255, 105, 120));
+        var textBrush = Application.Current.TryFindResource("TextBrush") as Brush ?? Brushes.White;
+        dc.DrawEllipse(null, new Pen(trackBrush, 13), center, radius, radius);
         double progress = Math.Clamp(RemainingSeconds / (double)Math.Max(1, TotalSeconds), 0, 0.999999);
         if (RemainingSeconds >= TotalSeconds) progress = 0.999999;
-        DrawArc(dc, center, radius, progress, new Pen(new SolidColorBrush(Color.FromRgb(255, 105, 120)), 13) { StartLineCap = PenLineCap.Round, EndLineCap = PenLineCap.Round });
+        DrawArc(dc, center, radius, progress, new Pen(accentBrush, 13) { StartLineCap = PenLineCap.Round, EndLineCap = PenLineCap.Round });
         string time = $"{RemainingSeconds / 60:00}:{RemainingSeconds % 60:00}";
         var text = new FormattedText(time, CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
-            new Typeface("Segoe UI Semibold"), 54, Brushes.White, VisualTreeHelper.GetDpi(this).PixelsPerDip);
+            new Typeface("Segoe UI Semibold"), 54, textBrush, VisualTreeHelper.GetDpi(this).PixelsPerDip);
         dc.DrawText(text, new Point(center.X - text.Width / 2, center.Y - text.Height / 2));
     }
 
